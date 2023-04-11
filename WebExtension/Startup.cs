@@ -60,12 +60,16 @@ namespace WebExtension
             services.AddSingleton<ICustomLogRepository, CustomLogRepository>();
             services.AddSingleton<IAssociateWebRepository, AssociateWebRepository>();
             services.AddSingleton<IOrderWebRepository, OrderWebRepository>();
+            services.AddSingleton<ICustomerWebRepository, CustomerWebRepository>();
+
 
             //Services
             services.AddSingleton<ICommonService, CommonService>();
             services.AddSingleton<ICustomLogService, CustomLogService>();
             services.AddSingleton<IAssociateWebService, AssociateWebService>();
             services.AddSingleton<IOrderWebService, OrderWebService>();
+            services.AddSingleton<ICustomerWebService, CustomerWebService>();
+
 
             //DS
             services.AddDirectScale(c =>
