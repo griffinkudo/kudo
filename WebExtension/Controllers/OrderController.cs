@@ -23,21 +23,11 @@ namespace WebExtension.Controllers
         [ViewData]
         public string DSBaseUrl { get; set; }
         //
-        private readonly ITokenProvider _tokenProvider;
-        //
-        private readonly ICommonService _commonService;
-        //
         private readonly IOrderWebService _orderWebService;
-        public OrderController(ITokenProvider tokenProvider,IOptions<configSetting> config,
-            ICommonService commonService,
+        public OrderController(
             IOrderWebService orderWebService
         )
         {
-            _tokenProvider = tokenProvider;
-            DSBaseUrl = _tokenProvider.GetDirectScaleServiceUrl().GetAwaiter().GetResult();
-            //
-            _commonService = commonService ?? throw new ArgumentNullException(nameof(commonService));
-            //
             _orderWebService = orderWebService ?? throw new ArgumentNullException(nameof(orderWebService));
         }
 
