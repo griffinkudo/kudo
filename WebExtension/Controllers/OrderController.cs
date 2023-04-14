@@ -12,6 +12,7 @@ using WebExtension.Helper;
 using WebExtension.Helper.Interface;
 using WebExtension.Helper.Models;
 using WebExtension.Models;
+using WebExtension.Models.Order;
 using WebExtension.Services;
 
 namespace WebExtension.Controllers
@@ -54,6 +55,20 @@ namespace WebExtension.Controllers
                 model.end = !string.IsNullOrEmpty(request?.end) ? DateTime.ParseExact(request?.end, DateTimeFormat.GetDateTimeFormat, provider, DateTimeStyles.None) : System.DateTime.Now;
                 model.orders = _orderWebService.GetFilteredOrders(model.search, model.begin, model.end).Result;
                 return new Responses().OkResult(model);
+            }
+            catch (Exception ex)
+            {
+                return new Responses().BadRequestResult(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("GetOrderDetailbyExtOrderNumber")]
+        public IActionResult GetOrderDetailbyExtOrderNumber([FromBody] GetOrderDetailbyExtOrderNumberRequest request)
+        {
+            try
+            {
+                return new Responses().OkResult(_orderWebService.GetOrderDetailbyExtOrderNumber(request).GetAwaiter().GetResult());
             }
             catch (Exception ex)
             {
