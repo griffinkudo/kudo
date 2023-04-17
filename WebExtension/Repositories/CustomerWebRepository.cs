@@ -25,13 +25,15 @@ namespace WebExtension.Repositories
         private readonly IUserService _userService;
         private readonly IAssociateService _associateService;
         private readonly ICustomLogService _customLogService;
+        private readonly IWebsiteService _websiteService;
 
-        public CustomerWebRepository(IDataService dataService, IUserService userService, IAssociateService associateService, ICustomLogService customLogService)
+        public CustomerWebRepository(IDataService dataService, IUserService userService, IAssociateService associateService, ICustomLogService customLogService, IWebsiteService websiteService)
         {
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _associateService = associateService ?? throw new ArgumentNullException(nameof(associateService));
             _customLogService = customLogService ?? throw new ArgumentNullException(nameof(customLogService));
+            _websiteService = websiteService ?? throw new ArgumentNullException(nameof(websiteService));
         }
         public async Task<User> UpdateBasetypeAndCreateNewUser(UpdateBasetypeAndCreateNewUserRequest request)
         {
@@ -51,6 +53,8 @@ namespace WebExtension.Repositories
                     await _associateService.UpdateAssociate(updateAssociateRequest);
                     Associate newAssociate = await _associateService.GetAssociate(Convert.ToInt32(request.associateID));
 
+                    //Create a new Website ( webalias )
+                    await _websiteService.CreateWebsite(newAssociate.AssociateId, request.username, "", 0, 1);
 
                     // Create a New User
                     var RegisterUserRequest = new RegisterUserRequest() {
@@ -63,6 +67,7 @@ namespace WebExtension.Repositories
                         corporateUser = false
                     };
                     response = await RegisterUser(RegisterUserRequest);
+                    
                 }
             }
             catch (Exception ex)
