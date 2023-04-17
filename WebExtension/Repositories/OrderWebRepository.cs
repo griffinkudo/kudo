@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using WebExtension.Models.Order;
 
 namespace WebExtension.Repositories
 {
     public interface IOrderWebRepository
     {
         List<int> GetFilteredOrderIds(string search, DateTime beginDate, DateTime endDate);
+        Task<GetOrderDetailbyExtOrderNumberResponse> GetOrderDetailbyExtOrderNumber(GetOrderDetailbyExtOrderNumberRequest request);
     }
     public class OrderWebRepository : IOrderWebRepository
     {
@@ -62,6 +64,27 @@ namespace WebExtension.Repositories
             }
 
             return sql;
+        }
+        public async Task<GetOrderDetailbyExtOrderNumberResponse> GetOrderDetailbyExtOrderNumber(GetOrderDetailbyExtOrderNumberRequest request)
+        {
+            using (var dbConnection = new SqlConnection(await _dataService.GetClientConnectionString()))
+            {
+                var parameters = new
+                {
+                    request.ExtOrderNumber
+                };
+
+                var queryStatement = $@"
+                    SELECT
+	                    o.[recordnumber] AS OrderNumber, p.recordnumber AS PaymentId
+                    FROM 
+	                    [dbo].[ORD_Order] o JOIN [dbo].[ORD_Payments] p ON o.recordnumber=p.OrderNumber
+                    WHERE 
+	                    [ExtOrderNumber]=@ExtOrderNumber
+                ";
+                var result = await dbConnection.QueryAsync<GetOrderDetailbyExtOrderNumberResponse>(queryStatement, parameters);
+                return result.FirstOrDefault();
+            }
         }
     }
 }

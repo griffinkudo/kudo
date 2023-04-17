@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebExtension.Models;
+using WebExtension.Models.Order;
 using WebExtension.Repositories;
 
 namespace WebExtension.Services
@@ -11,6 +12,7 @@ namespace WebExtension.Services
     public interface IOrderWebService
     {
         Task<List<OrderViewModel>> GetFilteredOrders(string search, DateTime beginDate, DateTime endDate);
+        Task<GetOrderDetailbyExtOrderNumberResponse> GetOrderDetailbyExtOrderNumber(GetOrderDetailbyExtOrderNumberRequest request);
     }
     public class OrderWebService : IOrderWebService
     {
@@ -49,6 +51,10 @@ namespace WebExtension.Services
 
             }
             return new List<OrderViewModel>();
+        }
+        public async Task<GetOrderDetailbyExtOrderNumberResponse> GetOrderDetailbyExtOrderNumber(GetOrderDetailbyExtOrderNumberRequest request)
+        {
+            return await _orderWebRepository.GetOrderDetailbyExtOrderNumber(request);
         }
     }
 }
