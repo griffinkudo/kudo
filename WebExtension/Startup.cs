@@ -78,6 +78,7 @@ namespace WebExtension
                 //c.AddCustomPage(Menu.Associates, "Custom Order Report", "/CustomPage/CustomOrderReport");
 
                 //Hooks
+                c.AddHook<ImportOrderHook>();
                 //c.AddHook<SubmitOrderHook>();
 
                 //Event Handler
